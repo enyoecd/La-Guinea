@@ -1,7 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/Header';
-import { HeroSpotlight } from './components/HeroSpotlight';
-import { CategoryNav } from './components/CategoryNav';
 import { DishCard } from './components/DishCard';
 import { DishModal } from './components/DishModal';
 import { OrderDrawer } from './components/OrderDrawer';
@@ -212,18 +210,37 @@ export default function App() {
     setActiveCategory(categoryId);
     const element = document.getElementById(categoryId);
     if (element) {
-      const yOffset = -140;
+      const isMobile = window.innerWidth < 768;
+      const yOffset = isMobile ? -155 : -130;
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
+
+  // Auto-highlight active category on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 170;
+      for (let i = CATEGORIES.length - 1; i >= 0; i--) {
+        const cat = CATEGORIES[i];
+        const el = document.getElementById(cat.id);
+        if (el && el.offsetTop <= scrollPosition) {
+          setActiveCategory(cat.id);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#131315] text-[#e5e1e4] flex flex-col font-['Plus_Jakarta_Sans'] selection:bg-[#f59e0b] selection:text-[#18181b]">
       {/* Toast Notification */}
       <Toast message={toastMessage} />
 
-      {/* Top Header */}
+      {/* Top Header with Search & Persistent Category Navigation */}
       <Header
         currentTable={currentTable}
         searchQuery={searchQuery}
@@ -234,9 +251,11 @@ export default function App() {
         onOpenWaiterModal={() => setIsWaiterModalOpen(true)}
         language={language}
         onToggleLanguage={() => setLanguage((l) => (l === 'ES' ? 'EN' : 'ES'))}
+        activeCategory={activeCategory}
+        onSelectCategory={handleSelectCategory}
       />
 
-      <main className="w-full pt-20 flex-1">
+      <main className="w-full pt-[148px] md:pt-[124px] flex-1">
         {/* Active Order Banner if order is being cooked */}
         {activeOrder && (
           <div className="bg-gradient-to-r from-[#b45309] to-[#78350f] text-white px-4 py-2.5 shadow-md flex items-center justify-between max-w-7xl mx-auto rounded-b-xl">
@@ -257,24 +276,8 @@ export default function App() {
           </div>
         )}
 
-        {/* Hero Spotlight Banner */}
-        <HeroSpotlight
-          onOpenFilter={() => setIsFilterModalOpen(true)}
-          onAddFeatured={() => {
-            const ribs = DISHES.find((d) => d.id === 'baby-back-ribs-full');
-            if (ribs) handleQuickAdd(ribs);
-          }}
-          activeFilterCount={activeFilterCount}
-        />
-
-        {/* Sticky Categories Navigation Bar */}
-        <CategoryNav
-          activeCategory={activeCategory}
-          onSelectCategory={handleSelectCategory}
-        />
-
         {/* Main Content: Dishes Catalog Grid + Sticky Comanda Sidebar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
             {/* Dishes Catalog (Cols 1-8 / 9) */}
@@ -314,7 +317,7 @@ export default function App() {
                   <section
                     key={category.id}
                     id={category.id}
-                    className="space-y-4 scroll-mt-36"
+                    className="space-y-4 scroll-mt-40 md:scroll-mt-32"
                   >
                     <div className="flex items-end justify-between border-b border-[#2e2e33]/70 pb-2">
                       <div>

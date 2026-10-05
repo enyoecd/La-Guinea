@@ -11,8 +11,8 @@ export interface CategoryInfo {
 export const CATEGORIES: CategoryInfo[] = [
   {
     id: 'appetizers',
-    name: 'Appetizers & Picoteo',
-    subtitle: 'Entrantes para compartir',
+    name: 'Entradas para compartir',
+    subtitle: 'Entradas & Picoteo',
     countLabel: '6 Variedades',
     iconName: 'tapas',
   },

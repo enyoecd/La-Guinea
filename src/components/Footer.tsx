@@ -17,10 +17,15 @@ export const Footer: React.FC<FooterProps> = ({
           
           {/* Brand Info */}
           <div className="space-y-3 md:col-span-1">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#f59e0b]/20 flex items-center justify-center">
-                <Flame className="w-5 h-5 text-[#f59e0b]" />
-              </div>
+            <div className="flex items-center gap-3">
+              <img
+                src="/logo.jpg"
+                alt="La Guinea Restaurante & Grill"
+                className="w-10 h-10 rounded-full object-cover border border-[#f59e0b] shadow-md shrink-0"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/favicon.svg';
+                }}
+              />
               <span className="font-['Space_Grotesk'] text-xl font-bold text-[#f4f4f5]">
                 La Guinea
               </span>

@@ -1,0 +1,6 @@
+{
+  "name": "La Guinea - Menú Digital QR & Restaurante Grill",
+  "description": "Menú digital interactivo por código QR para La Guinea Restaurante & Grill. Pedidos en mesa, especialidades a la brasa, cortes prémium y comanda directa a cocina.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
